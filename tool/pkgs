@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+PRJ=$(cd `dirname $0`/.. && pwd)
+MODULES=$PRJ/modules
+
+# export PUB_HOSTED_URL=https://pub.flutter-io.cn
+# export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
+
+for m in $MODULES/* ; do
+  pub=$m/pubspec.yaml
+  # echo "check $m"
+  if [ -f "$pub" ]; then
+    echo "running flutter packages $@ in $m"
+    cd $m && flutter packages "$@"
+  fi
+done
+
+echo "running flutter packages $@ in $PRJ"
+cd $PRJ && flutter packages "$@"

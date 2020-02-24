@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+PRJ=$(cd `dirname $0`/.. && pwd)
+MODULES=$PRJ/modules
+
+mvImg() {
+  file=$1
+  dest=$2
+  echo "moving $file to $dest"
+  if [ ! -d $dest ]; then
+    mkdir -p $dest
+  fi
+  mv $file $dest
+}
+
+mvImgs() {
+  fromDir=$1
+  toDir=$2
+
+  if [ -d $fromDir ]; then
+    for f in $fromDir/* ; do
+      if [ -f "$f" ]; then
+        mvImg "$f" "$toDir"
+      fi
+    done
+  fi
+}
+
+mvModuleImages() {
+  moduleDir=$1
+  imgs=$moduleDir/assets/images
+  if [ -d $imgs ]; then
+    cd $imgs
+    echo "working in $(pwd)"
+    mvImgs drawable-mdpi .
+    mvImgs drawable-hdpi "1.5x"
+    mvImgs drawable-xhdpi "2.0x"
+    mvImgs drawable-xxhdpi "3.0x"
+    mvImgs drawable-xxxhdpi "4.0x"
+    echo "done"
+  fi
+}
+
+mvModuleImages $PRJ
+for m in $MODULES/* ; do
+  mvModuleImages "$m"
+done

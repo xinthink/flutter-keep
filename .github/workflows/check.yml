@@ -1,0 +1,30 @@
+name: check
+
+on: [push, pull_request]
+
+jobs:
+  check:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: subosito/flutter-action@v1
+      with:
+        channel: dev
+    - name: config flutter
+      run: |
+        flutter --version
+        flutter config --enable-web
+    - name: setup configuration files
+      run: |
+        echo "${{ secrets.LocalDart }}" | base64 --decode > lib/local.dart
+    - name: analyze & test
+      run: |
+        flutter analyze
+        flutter test
+    - name: notification
+      if: cancelled() == false
+      uses: xinthink/action-telegram@v1.1
+      with:
+        botToken: ${{ secrets.TelegramBotToken }}
+        chatId: ${{ secrets.TelegramTarget }}
+        jobStatus: ${{ job.status }}
