@@ -39,7 +39,7 @@ const kAccentColorLight = MaterialColor(
     800: Color(0xFF3f00df),
     700: Color(0xFF2500d7),
     600: Color(0xFF6200ee),
-    500: Color(0xFF7e39fb),
+    500: Color(_kPurplePrimaryValue),
     400: Color(0xFF5400e8),
     300: Color(0xFF995dff),
     200: Color(0xFFe3b8ff),
