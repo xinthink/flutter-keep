@@ -9,7 +9,7 @@ import 'package:flt_keep/models.dart' show CurrentUser, Note, NoteState, NoteSta
 import 'package:flt_keep/services.dart' show notesCollection, CommandHandler;
 import 'package:flt_keep/styles.dart';
 import 'package:flt_keep/utils.dart';
-import 'package:flt_keep/widgets.dart' show AppDrawer, NotesGrid;
+import 'package:flt_keep/widgets.dart' show AppDrawer, NotesGrid, NotesList;
 
 /// Home screen, displays [Note] grid or list.
 class HomeScreen extends StatefulWidget {
@@ -20,6 +20,9 @@ class HomeScreen extends StatefulWidget {
 /// [State] of [HomeScreen].
 class _HomeScreenState extends State<HomeScreen> with CommandHandler {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  /// `true` to show notes in a GridView, a ListView otherwise.
+  bool _gridView = true;
 
   @override
   Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
@@ -46,17 +49,22 @@ class _HomeScreenState extends State<HomeScreen> with CommandHandler {
           final canCreate = filter.noteState.canCreate;
           return Scaffold(
             key: _scaffoldKey,
-            body: CustomScrollView(
-              slivers: <Widget>[
-                _appBar(context, filter, child),
-                if (hasNotes) const SliverToBoxAdapter(
-                  child: SizedBox(height: 24),
+            body: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints.tightFor(width: 720),
+                child: CustomScrollView(
+                  slivers: <Widget>[
+                    _appBar(context, filter, child),
+                    if (hasNotes) const SliverToBoxAdapter(
+                      child: SizedBox(height: 24),
+                    ),
+                    ..._buildNotesView(context, filter, notes),
+                    if (hasNotes) SliverToBoxAdapter(
+                      child: SizedBox(height: (canCreate ? kBottomBarSize : 10.0) + 10.0),
+                    ),
+                  ],
                 ),
-                ..._buildNotesView(context, filter, notes),
-                if (hasNotes) SliverToBoxAdapter(
-                  child: SizedBox(height: (canCreate ? kBottomBarSize : 10.0) + 10.0),
-                ),
-              ],
+              ),
             ),
             drawer: AppDrawer(),
             floatingActionButton: canCreate ? _fab(context) : null,
@@ -91,7 +99,6 @@ class _HomeScreenState extends State<HomeScreen> with CommandHandler {
           onPressed: () => _scaffoldKey.currentState?.openDrawer(),
         ),
         automaticallyImplyLeading: false,
-        elevation: 0,
       );
 
   Widget _topActions(BuildContext context) => Container(
@@ -101,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> with CommandHandler {
     ),
     padding: const EdgeInsets.symmetric(horizontal: 20),
     child: Card(
-      elevation: AppBarTheme.of(context).elevation,
+      elevation: 2,
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: isNotAndroid ? 7 : 5),
         child: Row(
@@ -122,7 +129,12 @@ class _HomeScreenState extends State<HomeScreen> with CommandHandler {
               ),
             ),
             const SizedBox(width: 16),
-            const Icon(AppIcons.view_list),
+            InkWell(
+              child: Icon(_gridView ? AppIcons.view_list : AppIcons.view_grid),
+              onTap: () => setState(() {
+                _gridView = !_gridView;
+              }),
+            ),
             const SizedBox(width: 18),
             _buildAvatar(context),
             const SizedBox(width: 10),
@@ -179,10 +191,13 @@ class _HomeScreenState extends State<HomeScreen> with CommandHandler {
       return [_buildBlankView(filter.noteState)];
     }
 
+    final asGrid = filter.noteState == NoteState.deleted || _gridView;
+    final factory = asGrid ? NotesGrid.create : NotesList.create;
     final showPinned = filter.noteState == NoteState.unspecified;
+
     if (!showPinned) {
       return [
-        NotesGrid(notes: notes, onTap: _onNoteTap),
+        factory(notes: notes, onTap: _onNoteTap),
       ];
     }
 
@@ -203,9 +218,9 @@ class _HomeScreenState extends State<HomeScreen> with CommandHandler {
 
     return [
       if (hasPinned) _buildLabel('PINNED', 0),
-      if (hasPinned) NotesGrid(notes: partition.item1, onTap: _onNoteTap),
+      if (hasPinned) factory(notes: partition.item1, onTap: _onNoteTap),
       if (hasPinned && hasUnpinned) _buildLabel('OTHERS'),
-      NotesGrid(notes: partition.item2, onTap: _onNoteTap),
+      factory(notes: partition.item2, onTap: _onNoteTap),
     ];
   }
 
