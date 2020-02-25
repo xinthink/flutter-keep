@@ -8,7 +8,7 @@
 This is a simplified [Google Keep] mobile app 'clone' built with [Flutter] + [Firebase]. For practicing prototyping and Flutter skills only.
 
 <center>
-  <video src='artworks/flt_keep_demo.mp4' type="video/mp4" width='400' alt="Flutter Keep demo" controls />
+  <img src='artworks/flt_keep_demo.gif' width='480' alt="Flutter Keep demo">
 </center>
 
 [Flutter]: https://flutter.dev
