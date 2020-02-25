@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:flt_keep/models.dart';
 import 'package:flt_keep/icons.dart';
@@ -54,10 +55,14 @@ class AppDrawer extends StatelessWidget {
           DrawerFilterItem(
             icon: AppIcons.settings_outlined,
             title: 'Settings',
+            onTap: () {
+              Navigator.popAndPushNamed(context, '/settings');
+            },
           ),
           DrawerFilterItem(
             icon: Icons.help_outline,
             title: 'About',
+            onTap: () => launch('https://github.com/xinthink/flutter-keep'),
           ),
         ],
       ),

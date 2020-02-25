@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:provider/provider.dart';
 
 import 'models.dart' show CurrentUser;
-import 'screens.dart' show HomeScreen, LoginScreen, NoteEditor;
+import 'screens.dart' show HomeScreen, LoginScreen, NoteEditor, SettingsScreen;
 import 'styles.dart';
 
 void main() => runApp(NotesApp());
@@ -22,7 +22,7 @@ class NotesApp extends StatelessWidget {
           primaryColor: Colors.white,
           accentColor: kAccentColorLight,
           appBarTheme: AppBarTheme.of(context).copyWith(
-            elevation: 2,
+            elevation: 0,
             brightness: Brightness.light,
             iconTheme: IconThemeData(
               color: kIconTintLight,
@@ -40,6 +40,9 @@ class NotesApp extends StatelessWidget {
         home: user.isInitialValue
           ? Scaffold(body: const SizedBox())
           : user.data != null ? HomeScreen() : LoginScreen(),
+        routes: {
+          '/settings': (_) => SettingsScreen(),
+        },
         onGenerateRoute: _generateRoute,
       ),
     ),
