@@ -16,6 +16,7 @@ local.dart
 **/GoogleService-Info.plist
 **/google-services.json
 web/init-firebase.js
+artworks/flt_keep_demo.gif
 
 # IntelliJ related
 *.iml
