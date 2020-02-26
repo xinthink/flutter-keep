@@ -3,7 +3,7 @@
 ---
 
 [![Check Status][check-badge]][check-link]
-<!-- [![MIT][license-badge]][license] -->
+[![MIT][license-badge]][license]
 
 This is a simplified [Google Keep] mobile app 'clone' built with [Flutter] + [Firebase]. For practicing prototyping and Flutter skills only.
 
@@ -18,4 +18,4 @@ Screenshots:
 [check-badge]: https://github.com/xinthink/flutter-keep/workflows/check/badge.svg
 [check-link]: https://github.com/xinthink/flutter-keep/actions?query=workflow%3Acheck
 [license-badge]: https://img.shields.io/github/license/xinthink/flutter-keep
-[license]: https://raw.githubusercontent.com/xinthink/flutter-keep/master/LICENSE
+[license]: https://github.com/xinthink/flutter-keep/blob/master/COPYING
