@@ -9,14 +9,13 @@ This is a simplified [Google Keep] mobile app 'clone' built with [Flutter] + [Fi
 
 Screenshots:
 
-![Flutter Keep demo](artworks/fltkeep_screenshots.jpg)
-
-<iframe width="720" height="405" src="https://www.youtube.com/embed/GXNXodzgbcM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Flutter Keep demo](artworks/fltkeep_screenshots.jpg)](https://youtu.be/GXNXodzgbcM)
 
 Web app screenshots:
 
-![web app screenshots](artworks/web-screenshots.jpg)
+[![web app screenshots](artworks/web-screenshots.jpg)][web app]
 
+[web app]: https://fltkeep.xinthink.com
 [Flutter]: https://flutter.dev
 [Firebase]: https://firebase.google.com/
 [Google Keep]: https://www.google.com/keep/
