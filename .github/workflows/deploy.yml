@@ -29,7 +29,7 @@ jobs:
     - name: Deploy to Firebase
       run: |
         cp -r build/web ./public
-        firebase deploy --token "$FIREBASE_TOKEN"
+        firebase deploy --token "${{ secrets.FIREBASE_TOKEN }}"
     - name: Notification
       if: cancelled() == false
       uses: xinthink/action-telegram@v1.1
