@@ -12,24 +12,19 @@ jobs:
     - uses: subosito/flutter-action@v1
       with:
         channel: dev
-    - name: Install dependencies
+    - name: Install js tools & depencies
+      run: |
+        npm i -g firebase-tools
+        cd functions && yarn
+    - name: Build flutter web
       run: |
         flutter config --enable-web
         flutter pub get
-    - name: Build
-      run: |
         flutter build web
-        touch build/web/.nojekyll
-        echo 'fltkeep.xinthink.com' > build/web/CNAME
-        echo "${{ secrets.FirebaseInitJs }}" | base64 --decode > build/web/init-firebase.js
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v2.9.0
-      env:
-        PERSONAL_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        PUBLISH_BRANCH: gh-pages
-        PUBLISH_DIR: ./build/web
-      with:
-        emptyCommits: false
+    - name: Deploy to Firebase
+      run: |
+        cp -r build/web ./public
+        firebase deploy --token "$FIREBASE_TOKEN"
     - name: Notification
       if: cancelled() == false
       uses: xinthink/action-telegram@v1.1

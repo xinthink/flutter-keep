@@ -28,3 +28,23 @@ jobs:
         botToken: ${{ secrets.TelegramBotToken }}
         chatId: ${{ secrets.TelegramTarget }}
         jobStatus: ${{ job.status }}
+
+  check-cloud-functions:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '8.x'
+    - name: build & lint
+      run: |
+        cd functions
+        yarn install
+        yarn build && yarn lint
+    - name: notification
+      if: cancelled() == false
+      uses: xinthink/action-telegram@v1.1
+      with:
+        botToken: ${{ secrets.TelegramBotToken }}
+        chatId: ${{ secrets.TelegramTarget }}
+        jobStatus: ${{ job.status }}
