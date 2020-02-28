@@ -15,6 +15,8 @@ jobs:
     - name: Install js tools & depencies
       run: |
         sudo npm i -g firebase-tools
+        sudo chown -R $USER:$GROUP ~/.npm
+        sudo chown -R $USER:$GROUP ~/.config
         cd functions && yarn
     - name: Build flutter web
       run: |
