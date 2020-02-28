@@ -14,7 +14,7 @@ jobs:
         channel: dev
     - name: Install js tools & depencies
       run: |
-        npm i -g firebase-tools
+        sudo npm i -g firebase-tools
         cd functions && yarn
     - name: Build flutter web
       run: |
