@@ -264,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> with CommandHandler {
       .orderBy('state', descending: true)
       : collection.where('state', isEqualTo: filter.noteState.index)
     )
-    .orderBy('createdAt', descending: true)
+    // .orderBy('createdAt', descending: true) index creation will take some time, disable for now
     .snapshots()
     .handleError((e) => debugPrint('query notes failed: $e'))
     .map((snapshot) => Note.fromQuery(snapshot));
