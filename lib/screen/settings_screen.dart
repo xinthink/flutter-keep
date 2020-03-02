@@ -59,12 +59,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
         content: const Text('Are you sure to sign out the current account?'),
         actions: <Widget>[
           FlatButton(
-            child: const Text('Yes'),
-            onPressed: () => Navigator.pop(context, true),
-          ),
-          FlatButton(
             child: const Text('No'),
             onPressed: () => Navigator.pop(context, false),
+          ),
+          FlatButton(
+            child: const Text('Yes'),
+            onPressed: () => Navigator.pop(context, true),
           ),
         ],
       ),
