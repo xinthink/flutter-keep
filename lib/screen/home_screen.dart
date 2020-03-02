@@ -256,18 +256,21 @@ class _HomeScreenState extends State<HomeScreen> with CommandHandler {
 
   /// Create notes query
   Stream<List<Note>> _createNoteStream(BuildContext context, NoteFilter filter) {
-    final uid = Provider.of<CurrentUser>(context)?.data?.uid;
-    final collection = notesCollection(uid);
-    return (filter.noteState == NoteState.unspecified
+    final user = Provider.of<CurrentUser>(context)?.data;
+    final sinceSignUp = DateTime.now().millisecondsSinceEpoch -
+      (user?.metadata?.creationTime?.millisecondsSinceEpoch ?? 0);
+    final useIndexes = sinceSignUp >= _10_min_millis; // since creating indexes takes time, avoid using composite index until later
+    final collection = notesCollection(user?.uid);
+    final query = filter.noteState == NoteState.unspecified
       ? collection
-      .where('state', isLessThan: NoteState.archived.index)
-      .orderBy('state', descending: true)
-      : collection.where('state', isEqualTo: filter.noteState.index)
-    )
-    // .orderBy('createdAt', descending: true) index creation will take some time, disable for now
-    .snapshots()
-    .handleError((e) => debugPrint('query notes failed: $e'))
-    .map((snapshot) => Note.fromQuery(snapshot));
+        .where('state', isLessThan: NoteState.archived.index) // show both normal/pinned notes when no filter specified
+        .orderBy('state', descending: true) // pinned notes come first
+      : collection.where('state', isEqualTo: filter.noteState.index);
+
+    return (useIndexes ? query.orderBy('createdAt', descending: true) : query)
+      .snapshots()
+      .handleError((e) => debugPrint('query notes failed: $e'))
+      .map((snapshot) => Note.fromQuery(snapshot));
   }
 
   /// Partition the note list by the pinned state
@@ -282,3 +285,5 @@ class _HomeScreenState extends State<HomeScreen> with CommandHandler {
       : Tuple2(notes, []);
   }
 }
+
+const _10_min_millis = 600000;
