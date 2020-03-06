@@ -36,7 +36,7 @@ class _NoteEditorState extends State<NoteEditor> with CommandHandler {
   final Note _note;
   /// The origin copy before editing
   final Note _originNote;
-  Color get _noteColor => _note.color ?? _defaultNoteColor;
+  Color get _noteColor => _note.color ?? kDefaultNoteColor;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   StreamSubscription<Note> _noteSubscription;
@@ -200,17 +200,14 @@ class _NoteEditorState extends State<NoteEditor> with CommandHandler {
         value: _note,
         child: Consumer<Note>(
           builder: (_, note, __) => Container(
-            color: note.color ?? _defaultNoteColor,
+            color: note.color ?? kDefaultNoteColor,
             padding: const EdgeInsets.symmetric(vertical: 19),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 NoteActions(),
                 if (_note.state.canEdit) const SizedBox(height: 16),
-                if (_note.state.canEdit) LinearColorPicker(
-                  color: note.color ?? _defaultNoteColor,
-                  listener: _onColorChanged,
-                ),
+                if (_note.state.canEdit) LinearColorPicker(),
                 const SizedBox(height: 12),
               ],
             ),
@@ -273,11 +270,6 @@ class _NoteEditorState extends State<NoteEditor> with CommandHandler {
     }
   }
 
-  /// Callback when a new color picked.
-  void _onColorChanged(Color color) {
-    _note.updateWith(color: color);
-  }
-
   /// Update this note to the given [state]
   void _updateNoteState(uid, NoteState state) {
     // new note, update locally
@@ -295,5 +287,3 @@ class _NoteEditorState extends State<NoteEditor> with CommandHandler {
     ));
   }
 }
-
-final _defaultNoteColor = kNoteColors.first;

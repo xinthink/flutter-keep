@@ -63,6 +63,7 @@ const Iterable<Color> kNoteColors = [
   Color(0xFFE6C9A9),
   Color(0xFFE9EAEE),
 ];
+final kDefaultNoteColor = kNoteColors.first;
 
 /// [TextStyle] for note title in a preview card
 const kCardTitleLight = TextStyle(

@@ -35,7 +35,7 @@ abstract class NoteCommand {
 }
 
 /// A [NoteCommand] to update state of a [Note].
-class NoteStateUpdateCommand  extends NoteCommand {
+class NoteStateUpdateCommand extends NoteCommand {
   final NoteState from;
   final NoteState to;
 
@@ -131,13 +131,11 @@ extension NoteStore on Note {
   /// Save this note in FireStore.
   ///
   /// If this's a new note, a FireStore document will be created automatically.
-  Future<void> saveToFireStore(String uid) async {
+  Future<dynamic> saveToFireStore(String uid) async {
     final col = notesCollection(uid);
-    if (id == null) {
-      await col.add(toJson());
-    } else {
-      await col.document(id).updateData(toJson());
-    }
+    return id == null
+      ? col.add(toJson())
+      : col.document(id).updateData(toJson());
   }
 
   /// Update this note to the given [state].
