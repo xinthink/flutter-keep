@@ -1,18 +1,23 @@
-import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart' show Firebase;
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'models.dart' show CurrentUser;
 import 'screens.dart' show HomeScreen, LoginScreen, NoteEditor, SettingsScreen;
 import 'styles.dart';
 
-void main() => runApp(NotesApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(NotesApp());
+}
 
 class NotesApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) => StreamProvider.value(
-    value: FirebaseAuth.instance.onAuthStateChanged.map((user) => CurrentUser.create(user)),
+    value: FirebaseAuth.instance.authStateChanges().map((user) => CurrentUser.create(user)),
     initialData: CurrentUser.initial,
     child: Consumer<CurrentUser>(
       builder: (context, user, _) => MaterialApp(

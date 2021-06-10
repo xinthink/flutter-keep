@@ -5,10 +5,10 @@ import 'package:flutter/foundation.dart';
 @immutable
 class CurrentUser {
   final bool isInitialValue;
-  final FirebaseUser data;
+  final User data;
 
   const CurrentUser._(this.data, this.isInitialValue);
-  factory CurrentUser.create(FirebaseUser data) => CurrentUser._(data, false);
+  factory CurrentUser.create(User data) => CurrentUser._(data, false);
 
   /// The inital empty instance.
   static const initial = CurrentUser._(null, true);

@@ -102,7 +102,7 @@ mixin CommandHandler<T extends StatefulWidget> on State<T> {
 /// Add note related methods to [QuerySnapshot].
 extension NoteQuery on QuerySnapshot {
   /// Transforms the query result into a list of notes.
-  List<Note> toNotes() => documents
+  List<Note> toNotes() => docs
     .map((d) => d.toNote())
     .nonNull
     .asList();
@@ -111,17 +111,20 @@ extension NoteQuery on QuerySnapshot {
 /// Add note related methods to [QuerySnapshot].
 extension NoteDocument on DocumentSnapshot {
   /// Transforms the query result into a list of notes.
-  Note toNote() => exists
-    ? Note(
-      id: documentID,
+  Note toNote() {
+    if (!exists) return null;
+
+    final data = this.data();
+    return Note(
+      id: id,
       title: data['title'],
       content: data['content'],
       color: _parseColor(data['color']),
       state: NoteState.values[data['state'] ?? 0],
       createdAt: DateTime.fromMillisecondsSinceEpoch(data['createdAt'] ?? 0),
       modifiedAt: DateTime.fromMillisecondsSinceEpoch(data['modifiedAt'] ?? 0),
-    )
-    : null;
+    );
+  }
 
   Color _parseColor(num colorInt) => Color(colorInt ?? kNoteColors.first.value);
 }
@@ -135,7 +138,7 @@ extension NoteStore on Note {
     final col = notesCollection(uid);
     return id == null
       ? col.add(toJson())
-      : col.document(id).updateData(toJson());
+      : col.doc(id).update(toJson());
   }
 
   /// Update this note to the given [state].
@@ -145,10 +148,10 @@ extension NoteStore on Note {
 }
 
 /// Returns reference to the notes collection of the user [uid].
-CollectionReference notesCollection(String uid) => Firestore.instance.collection('notes-$uid');
+CollectionReference notesCollection(String uid) => FirebaseFirestore.instance.collection('notes-$uid');
 
 /// Returns reference to the given note [id] of the user [uid].
-DocumentReference noteDocument(String id, String uid) => notesCollection(uid).document(id);
+DocumentReference noteDocument(String id, String uid) => notesCollection(uid).doc(id);
 
 /// Update a note to the [state], using information in the [command].
 Future<void> updateNoteState(NoteState state, String id, String uid) =>
@@ -156,4 +159,4 @@ Future<void> updateNoteState(NoteState state, String id, String uid) =>
 
 /// Update a note [id] of user [uid] with properties [data].
 Future<void> updateNote(Map<String, dynamic> data, String id, String uid) =>
-  noteDocument(id, uid).updateData(data);
+  noteDocument(id, uid).update(data);
